@@ -54,11 +54,10 @@ class Domain():
 			self.army['coutiliers'] = int(input("Number of coutiliers: "))
 		self.army['rest'] = int(input("Number of other military/auxiliary units: "))
 		
-		activity = input("Owner's activity (multiplier, default=1): ")
-		if activity == "":
-			self.activity = 1
-		else:
-			self.activity = float(activity)
+		if advanced:
+			activity = input("Owner's activity (multiplier, default=1): ")
+			if activity != "":
+				self.activity = float(activity)
 		
 		self.process_strength()
 
