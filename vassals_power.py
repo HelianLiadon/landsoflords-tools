@@ -31,6 +31,7 @@ def process_domain_strength(population, army, activity):
 class Domain():
 	def __init__(self, liege=None):
 		self.vassals = []
+		self.owner = ""
 		self.liege = liege
 		self.population = 0
 		self.army = {}
@@ -41,6 +42,7 @@ class Domain():
 
 	def register(self, advanced=False):
 		self.name = input("Domain name: ")
+		self.owner = input("Owner: ")
 		self.population = int(input("Population: "))
 		
 		self.army['knights'] = int(input("Number of knights: "))
@@ -93,6 +95,7 @@ def to_jsonable(liege):
 	l = {'population': liege.population,
 		'army': liege.army,
 		'name': liege.name,
+		'owner': liege.owner,
 		'vassals': [],
 		'activity': liege.activity,
 	}
@@ -105,6 +108,8 @@ def from_json(json, liege=None):
 	l = Domain(liege=liege)
 	l.population = json['population']
 	l.name = json['name']
+	if 'owner' in json:
+		l.owner = json['owner']
 	l.activity = json['activity']
 	l.army = json['army']
 	l.process_strength()
@@ -153,8 +158,12 @@ def pretty_print(liege, indent=0):
 	tab = ""
 	for i in range(indent):
 		tab += "\t"
+
+	owner = ""
+	if liege.owner:
+		owner = " ({})".format(liege.owner)
 	
-	print("{}{} {}".format(tab, liege.name, relat_str))
+	print("{}{}{} {}".format(tab, liege.name, owner, strength))
 
 	for vassal in liege.vassals:
 		pretty_print(vassal, indent=indent+1)
