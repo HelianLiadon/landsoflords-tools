@@ -27,6 +27,26 @@ def process_domain_strength(population, army, activity):
 	return domain_raw * activity
 
 
+def ask_for(conversion_funct, request_str, exceptions=None):
+	"""
+	@exceptions: List of exceptions, each exception being a list composed
+			of two elements: the value to match to be in the
+			exception case, and the value to return in this
+			situation.
+	"""
+	value = input(request_str)
+	if exceptions is not None:
+		for exception in exceptions:
+			if value == exception[0]:
+				return exception[1]
+
+	try:
+		return conversion_funct(value)
+	except ValueError as ve:
+		print("Invalid input ({})".format(ve))
+		return ask_for(conversion_funct, request_str,
+				exceptions=exceptions)
+
 
 class Domain():
 	def __init__(self, liege=None):
@@ -43,23 +63,23 @@ class Domain():
 	def register(self, advanced=False):
 		self.name = input("Domain name: ")
 		self.owner = input("Owner: ")
-		self.population = int(input("Population: "))
+		self.population = ask_for(int, "Population: ")
 		
-		self.army['knights'] = int(input("Number of knights: "))
-		self.army['catapults'] = int(input("Number of catapults: "))
+		self.army['knights'] = ask_for(int, "Number of knights: ")
+
+		self.army['catapults'] = ask_for(int, "Number of catapults: ")
 		if advanced:
-			self.army['pikemen'] = int(input("Number of pikemen: "))
-			self.army['halberdiers'] = int(input("Number of halberdiers: "))
-			self.army['crossbowmen'] = int(input("Number of crossbowmen: "))
-			self.army['archers'] = int(input("Number of archers: "))
-			self.army['battering_rams'] = int(input("Number of battering_rams: "))
-			self.army['coutiliers'] = int(input("Number of coutiliers: "))
-		self.army['rest'] = int(input("Number of other military/auxiliary units: "))
+			self.army['pikemen'] = ask_for(int, "Number of pikemen: ")
+			self.army['halberdiers'] = ask_for(int, "Number of halberdiers: ")
+			self.army['crossbowmen'] = ask_for(int, "Number of crossbowmen: ")
+			self.army['archers'] = ask_for(int, "Number of archers: ")
+			self.army['battering_rams'] = ask_for(int, "Number of battering_rams: ")
+			self.army['coutiliers'] = ask_for(int, "Number of coutiliers: ")
+		self.army['rest'] = ask_for(int, "Number of other military/auxiliary units: ")
 		
 		if advanced:
-			activity = input("Owner's activity (multiplier, default=1): ")
-			if activity != "":
-				self.activity = float(activity)
+			activity = ask_for(float, "Owner's activity (multiplier, default=1): ",
+				exceptions=[["", 1]])
 		
 		self.process_strength()
 
