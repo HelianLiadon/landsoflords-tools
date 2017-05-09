@@ -12,7 +12,7 @@ def process_domain_strength(population, army, activity):
 				+ army['catapults'] \
 				+ army['crossbowmen'] \
 				+ (army['battering_rams'] + army['archers'] \
-					+ army['coutiliers'] + army['pikemen'] \
+					+ army['coutiliers'] + army['pikemen']\
 					+ army['halberdiers']) \
 					/ 2. \
 				+ army['rest'] / 4 
@@ -69,16 +69,24 @@ class Domain():
 
 		self.army['catapults'] = ask_for(int, "Number of catapults: ")
 		if advanced:
-			self.army['pikemen'] = ask_for(int, "Number of pikemen: ")
-			self.army['halberdiers'] = ask_for(int, "Number of halberdiers: ")
-			self.army['crossbowmen'] = ask_for(int, "Number of crossbowmen: ")
-			self.army['archers'] = ask_for(int, "Number of archers: ")
-			self.army['battering_rams'] = ask_for(int, "Number of battering_rams: ")
-			self.army['coutiliers'] = ask_for(int, "Number of coutiliers: ")
-		self.army['rest'] = ask_for(int, "Number of other military/auxiliary units: ")
+			self.army['pikemen'] = ask_for(int, "Number of\
+								pikemen: ")
+			self.army['halberdiers'] = ask_for(int, "Number of\
+								halberdiers: ")
+			self.army['crossbowmen'] = ask_for(int, "Number of\
+								crossbowmen: ")
+			self.army['archers'] = ask_for(int, "Number of\
+								archers: ")
+			self.army['battering_rams'] = ask_for(int, "Number of\
+							battering_rams: ")
+			self.army['coutiliers'] = ask_for(int, "Number of\
+								coutiliers: ")
+		self.army['rest'] = ask_for(int, "Number of other\
+						military/auxiliary units: ")
 		
 		if advanced:
-			activity = ask_for(float, "Owner's activity (multiplier, default=1): ",
+			activity = ask_for(float, "Owner's activity\
+				(multiplier, default=1): ",
 				exceptions=[["", 1]])
 		
 		self.process_strength()
@@ -164,16 +172,18 @@ def get_domains(advanced=False):
 
 
 def sort_vassals(liege):
-	liege.vassals = sorted(liege.vassals, key=lambda e: e.total_strength(), reverse=True)
+	liege.vassals = sorted(liege.vassals,
+				key=lambda e: e.total_strength(), reverse=True)
 	for vassal in liege.vassals:
 		if len(vassal.vassals):
 			sort_vassals(vassal)
 	
 
 def pretty_print(liege, indent=0):
-	relat_str = ""
+	strength = ""
 	if liege.liege is not None:
-		relat_str = ": {}%".format(round(100 * liege.total_strength() / liege.liege.total_strength(), 2))
+		strength = ": {}%".format(round(100 * liege.total_strength()
+					/ liege.liege.total_strength(), 2))
 	
 	tab = ""
 	for i in range(indent):
@@ -191,10 +201,12 @@ def pretty_print(liege, indent=0):
 
 if __name__ == "__main__":
 
-	parser = argparse.ArgumentParser(description="Calculating relative strength of a domain's vassals, recursively.")
+	parser = argparse.ArgumentParser(description="Calculating relative\
+				strength of a domain's vassals, recursively.")
 	parser.add_argument("--input", nargs='?', help="Input JSON file")
 	parser.add_argument("--output", nargs='?', help="Output JSON file")
-	parser.add_argument("--advanced", action='store_true', help="Advanced mode for input (more detailed army command-line input)")
+	parser.add_argument("--advanced", action='store_true', help="Advanced\
+		mode for input (more detailed army command-line input)")
 	args = parser.parse_args()
 
 	if args.input is None:
@@ -205,7 +217,8 @@ if __name__ == "__main__":
 
 	sort_vassals(root)
 	pretty_print(root)
-	print("\n{} total strength: {} pts".format(root.name, round(root.t_strength)))
+	print("\n{} total strength: {} pts".format(root.name,
+					round(root.t_strength)))
 
 	if args.output is not None:
 		with open(args.output, "w") as f:
