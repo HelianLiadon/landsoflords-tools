@@ -189,23 +189,26 @@ def pretty_print(liege, indent=0):
 		pretty_print(vassal, indent=indent+1)
 
 
-parser = argparse.ArgumentParser(description="Calculating relative strength of a domain's vassals, recursively.")
-parser.add_argument("--input", nargs='?', help="Input JSON file")
-parser.add_argument("--output", nargs='?', help="Output JSON file")
-parser.add_argument("--advanced", action='store_true', help="Advanced mode for input (more detailed army command-line input)")
-args = parser.parse_args()
+if __name__ == "__main__":
 
-if args.input is None:
-	root = get_domains(args.advanced)
-else:
-	with open(args.input, "r") as f:
-		root = from_json(json.load(f))
+	parser = argparse.ArgumentParser(description="Calculating relative strength of a domain's vassals, recursively.")
+	parser.add_argument("--input", nargs='?', help="Input JSON file")
+	parser.add_argument("--output", nargs='?', help="Output JSON file")
+	parser.add_argument("--advanced", action='store_true', help="Advanced mode for input (more detailed army command-line input)")
+	args = parser.parse_args()
 
-sort_vassals(root)
-pretty_print(root)
+	if args.input is None:
+		root = get_domains(args.advanced)
+	else:
+		with open(args.input, "r") as f:
+			root = from_json(json.load(f))
 
-if args.output is not None:
-	with open(args.output, "w") as f:
-		json.dump(to_jsonable(root), f, indent=4)
+	sort_vassals(root)
+	pretty_print(root)
+	print("\n{} total strength: {} pts".format(root.name, round(root.t_strength)))
 
-input("\nPress Enter to exit")
+	if args.output is not None:
+		with open(args.output, "w") as f:
+			json.dump(to_jsonable(root), f, indent=4)
+
+	input("\nPress Enter to exit")
