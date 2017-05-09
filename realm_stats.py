@@ -43,13 +43,15 @@ def print_ratio_owners(json):
 	if 'owner' not in json:
 		return
 	nbr_domains, owners = get_owners_and_nbr_domains(json)
-	print("{} domains, {} owners : ratio of {}".format(nbr_domains, len(owners), round(nbr_domains / len(owners), 2)))
+	print("{} domains, {} owners : ratio of {}".format(nbr_domains,
+			len(owners), round(nbr_domains / len(owners), 2)))
 
 def get_owners(json, owners):
 	if json['owner'] not in owners:
 		owners[json['owner']] = 0
 	owners[json['owner']] += \
-		vassals_power.process_domain_strength(json['population'], json['army'], json['activity'])
+		vassals_power.process_domain_strength(json['population'],
+					json['army'], json['activity'])
 	for vassal in json['vassals']:
 		get_owners(vassal, owners)
 
@@ -64,14 +66,16 @@ def print_owners_strengths(json, nbr_owners):
 		t_strength += owner[1]
 	position = 1
 	for owner in owners[:nbr_owners]:
-		print("{}- {} : {}%".format(position, owner[0], round(100 * owner[1] / t_strength, 2)))
+		print("{}- {} : {}%".format(position, owner[0],
+				round(100 * owner[1] / t_strength, 2)))
 		position += 1
 
 def get_militarism(json, militarism):
 	total_soldiers = 0
 	for troop, nbr in json['army'].items():
 		total_soldiers += nbr
-	militarism[json['name']] = round(100 * total_soldiers / (json['population'] / 50), 2)
+	militarism[json['name']] = round(100 * total_soldiers
+					/ (json['population'] / 50), 2)
 	for vassal in json['vassals']:
 		get_militarism(vassal, militarism)
 
@@ -86,9 +90,12 @@ def print_militarism(json, nbr_domains):
 		print("{}- {} : {}%".format(position, domain[0], domain[1]))
 		position += 1
 
-parser = argparse.ArgumentParser(description="Getting some stats on a domain and its vassals.")
-parser.add_argument("--owners", nargs='?', help="Outputs a given number of owners in the owners' strength ranking", default=15, type=int)
-parser.add_argument("--militarism", nargs='?', help="Outputs a given number of domains for the militarism ranking", default=15, type=int)
+parser = argparse.ArgumentParser(description="Getting some stats on a domain\
+						and its vassals.")
+parser.add_argument("--owners", nargs='?', help="Outputs a given number of\
+		owners in the owners' strength ranking", default=15, type=int)
+parser.add_argument("--militarism", nargs='?', help="Outputs a given number of\
+		domains for the militarism ranking", default=15, type=int)
 parser.add_argument("file", nargs=1, help="Path to input file")
 args = parser.parse_args()
 
